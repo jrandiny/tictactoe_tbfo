@@ -243,14 +243,17 @@ implementation
 
   {KAMUS LOKAL}
   var
-    i:integer;
+    i,j:integer;
     line:string;
     cc:char;    {Karakter sekarang}
+    cc2:char;
     ingested:string; {String yang telah diingest}
+    secondIngest:string;
     part:integer;
+    inputCount:integer;
 
     tempFromState:integer;
-    tempInput:integer;
+    tempInput:ArrInt;
     tempToState:integer;
 
   begin
@@ -278,7 +281,28 @@ implementation
               end;
               2:
               begin
-                tempInput := getAlphabet(ingested);
+                j:=1; {untuk multi input}
+                inputCount:=1;
+                secondIngest:='';
+                while(j<=length(ingested))do
+                begin
+                  cc2 := ingested[j];
+                  if(cc2 = ',')then
+                  begin
+                    tempInput.isi[inputCount] := getAlphabet(secondIngest);
+                    inc(inputCount);
+                    secondIngest := '';
+                  end else
+                  begin
+                    secondIngest := secondIngest + cc2;
+                  end;
+
+                  inc(j);
+                end;
+
+                tempInput.isi[inputCount] := getAlphabet(secondIngest);
+
+                tempInput.neff := inputCount;
               end;
               else
               begin
@@ -303,13 +327,22 @@ implementation
 
         tempToState := getState(ingested);
         {cek valid}
-        if((tempToState=VALUNDEF)or(tempInput=VALUNDEF)or(tempToState=VALUNDEF))then
+        if((tempToState=VALUNDEF)or(tempToState=VALUNDEF))then
         begin
           loadSukses := false;
         end else
         begin
           {Insert to table}
-          transitionTable.isi[tempFromState][tempInput] := tempToState;
+          for j:=1 to tempInput.neff do
+          begin
+            if(tempInput.isi[j] <> VALUNDEF)then
+            begin
+              transitionTable.isi[tempFromState][tempInput.isi[j]] := tempToState;
+            end else
+            begin
+              loadSukses := false;
+            end;
+          end;
         end;
 
       end;
