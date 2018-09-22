@@ -13,9 +13,13 @@ interface
   {F.S. : DFA berhasil diload sesuai namaFile, jika kosong maka diminta ke user}
 
   {*** KELOMPOK I/O ***}
-  procedure inputAlphabet();
+  procedure inputAlphabet(prompt:string);
   {I.S. : DFA sudah diload, currState terdefinisi}
   {F.S. : Meminta input user lalu mengubah currState sesuai input dan transitionTable}
+
+  procedure output();
+  {I.S. : DFA sudah diload, currState terdefinisi}
+  {F.S. : Tercetak kondisi papan sekarang}
 
   {*** KELOMPOK OPERASI ***}
   procedure transition(inputAlphabet:integer);
@@ -90,7 +94,7 @@ implementation
   {END of isFinalState}
 
   {********************************************}
-  procedure inputAlphabet();
+  procedure inputAlphabet(prompt:string);
 
   {KAMUS LOKAL}
   var
@@ -99,7 +103,7 @@ implementation
 
   {ALGORITMA}
   begin
-    write('Input = ');
+    write(prompt);
     readln(input);
 
     alphabet := getAlphabet(input);
@@ -138,6 +142,43 @@ implementation
     getNextState := transitionTable.isi[currState][inputAlphabet];
   end;
   {END of getNextState}
+
+  {*******************************************}
+  procedure output();
+
+  {KAMUS LOKAL}
+  var
+    i:integer;
+    stringState:string;
+    currCode:char;
+
+  {ALGORITMA}
+  begin
+    stringState := getStateLabel(currState);
+
+    i:=1;
+    while(i<=length(stringState))do
+    begin
+      currCode := stringState[i];
+      if(currCode <> '0')then
+      begin
+        write(currCode);
+      end else
+      begin
+        write(' ');
+      end;
+
+      if((i mod 3) = 0)then
+      begin
+        writeln();
+      end else
+      begin
+        write('|');
+      end;
+      inc(i);
+    end;
+  end;
+  {END of output}
 
   procedure debugPrint();
   var
