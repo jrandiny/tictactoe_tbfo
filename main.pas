@@ -36,12 +36,17 @@ begin
 
   writeln();
 
-  while(not(isFinalState(currState)))do
+  if(currState <> VALUNDEF)then
   begin
-    output();
-    inputAlphabet('Masukkan angka lokasi (1-9) = ');
-    writeln('currState = ',currState);
+    while(not(isFinalState(currState)))do
+    begin
+      output();
+      inputAlphabet('Masukkan angka lokasi (1-9) = ');
+      writeln('currState = ',currState);
+    end;
+
+    writeln('SELESAI, komputer menang');
   end;
 
-  writeln('SELESAI, komputer menang');
+
 end.
