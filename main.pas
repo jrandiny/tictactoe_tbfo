@@ -36,10 +36,12 @@ begin
 
   writeln();
 
-  while(true)do
+  while(not(isFinalState(currState)))do
   begin
     output();
     inputAlphabet('Masukkan angka lokasi (1-9) = ');
     writeln('currState = ',currState);
   end;
+
+  writeln('SELESAI, komputer menang');
 end.
