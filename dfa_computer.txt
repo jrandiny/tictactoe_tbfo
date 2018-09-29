@@ -139,7 +139,7 @@ OOXXOOOXXd
 9
 
 [TRANSITIONS-T]
-1    |     2      |  3         |  4         |     6      |     7      |      8     |     9
+                   1    |     2      |  3         |  4         |     6      |     7      |      8     |     9
 0000O0000- | X000O000O- | 0X00O000O- | 00X0O000O- | 000XO000O- | 0000OX00O- | 0000O0X0O- | 0000O00XO- | 0000O0O0X-
 X000O000O- | X000O000O- | XXO0O000O- | XOX0O000O- | X00XO0O0O- | X000OXO0O- | X00OO0X0O- | X0O0O00XO- | X000O000O-
 0X00O000O- | XXO0O000O- | 0X00O000O- | OXX0O000Ow | OX0XO000Ow | OX00OX00Ow | OX00O0X0Ow | OX00O00XOw | 0X00O000O-
