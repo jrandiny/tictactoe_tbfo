@@ -1,4 +1,4 @@
-#include<iostream>
+#include <iostream>
 #include <queue>
 #include <fstream>
 
@@ -7,22 +7,17 @@ using namespace std;
 queue <string> stateList;
 queue <string> allState;
 queue <string> finishState;
-bool pcTurn = true;
 
 ofstream myfile;
 
 bool isValid(string board,int fillIn){
+//Mengembalikan true jika fillIn adalah angka valid untuk board
   return board[fillIn-1] == '0';
 }
 
-void printDebug(string board){
-  for (int i = 0; i < board.size(); i++) {
-    cout<<i<<" "<<board[i]<<endl;
-  }
-}
-
 void finishAll(){
-  cout<<"trace dipanggil"<<endl;
+//Menyelesaikan semua pekerjaan dan menulisnya ke file
+  cout<<"Menulis file"<<endl;
   myfile.close();
 
   ofstream finishFile;
@@ -47,6 +42,7 @@ void finishAll(){
 }
 
 int cekValidWin(string board,int indeks){
+//cek apakah kemenangan valid (hanya komputer yang boleh menang)
   if(board[indeks]=='X'){
     cout<<"ERROR ABORT, PLAYER WIN"<<endl;
     cout<<"Board = "<<board<<endl;
@@ -62,16 +58,16 @@ int cekValidWin(string board,int indeks){
 int isFinish(string board){
   //return
   //99 = error player WIN
-  //1  = cpu win
-  //2  = draw
-  //0  = continue
+  //1  = cpu menang
+  //2  = seri
+  //0  = lanjut
 
-  //row
+  //baris
   for (int i=0; i<9; i+=3)
   {
     if(board[i]==board[i+1] && board[i+1]==board[i + 2] && board[i]!='0')
     {
-      cout<<"row is finish "<<i<<endl;
+      cout<<"Menang - baris "<<((i/3)+1)<<endl;
       return cekValidWin(board,i);
     }
   }
@@ -81,7 +77,7 @@ int isFinish(string board){
   {
     if (board[i]==board[i+3] && board[i+3]==board[i+6] && board[i]!='0')
     {
-      cout<<"col is finish "<<i<<endl;
+      cout<<"Menang - kolom "<<(i+1)<<endl;
       return cekValidWin(board,i);
     }
   }
@@ -89,14 +85,14 @@ int isFinish(string board){
   //diagonal atas kiri ke bawah kanan
   if(board[0]==board[4] && board[4]==board[8] && board[0]!='0')
   {
-    cout<<"diagonal atas kiri bawah kanan"<<endl;
+    cout<<"Menang - diagonal atas kiri -> bawah kanan"<<endl;
     return cekValidWin(board,0);
   }
 
   // diagonal atas kanan ke bawah kiri
   if(board[2]==board[4] && board[4]==board[6] && board [2]!='0')
   {
-    cout<<"diagonal atas kanan bawah kiri"<<endl;
+    cout<<"Menang - diagonal atas kanan -> bawah kiri"<<endl;
     return cekValidWin(board,2);
   }
 
@@ -109,11 +105,16 @@ int isFinish(string board){
     }
   }
 
+  if(state ==2){
+    cout<<"Seri"<<endl;
+  }
+
   return state;
 
 }
 
 void printBoard(string board){
+//menceta
   cout<<endl;
   for (int i = 0; i < 9; i++) {
     cout<<board[i]<<" ";
@@ -124,54 +125,91 @@ void printBoard(string board){
 }
 
 int askInput(string board){
+//meminta input sampai input valid
+//Jika input = -99, selesaikan program
   int input = 5;
+
   while (!isValid(board,input)) {
     printBoard(board);
     cout<<"enter input : ";
     cin>>input;
+
     if(input == -99){
       finishAll();
+    }else if (!isValid(board, input)) {
+      cout<<"Invalid input"<<endl;
     }
   }
 
   return input;
 }
 
-void processState(string board){
-  myfile<<board<<" | ";
-  string boardCopy = board;
-  for (int i = 1; i <=9 ; i++) {
-    board = boardCopy;
-    if(board[9] =='-'){
-      if(isValid(board,i)){
-        board[i-1] = 'X';
-        int pcInput = askInput(board);
-        board[pcInput-1] = 'O';
-        int condition = isFinish(board);
-        if (condition == 2){
-          board[9] = 'd';
-          finishState.push(board);
-        }else if (condition == 1) {
-          board[9] = 'w';
-          finishState.push(board);
-        }else if (condition == 99) {
-          finishAll();
-        }
-        if(i!=9){
-          myfile<<board<<" | ";
-        }else{
-          myfile<<board;
-        }
+void appendToFile(string board,int loc){
+//append to file (main table)
+  if(loc!=9){
+    myfile<<board<<" | ";
+  }else{
+    myfile<<board;
+  }
+}
 
-        stateList.push(board);
-      }else{
-        if(i!=5){
-          myfile<<board<<" | ";
+void processState(string board){
+//Memproses state (1 baris)
+
+  //Print state awal
+  myfile<<board<<" | ";
+  //Copy board supaya bisa dimodifikasi
+  string boardCopy = board;
+
+  //Coba 1-9
+  for (int i = 1; i <=9 ; i++) {
+
+    board = boardCopy;
+
+    //skip untuk angka 5
+    if(i!=5){
+      //Cek apakah sudah menang
+      if(board[9] =='-'){
+        //Cek input valid jika belum menang
+        if(isValid(board,i)){
+          //saat valid isi
+          board[i-1] = 'X';
+
+          //Minta input PC dan isi
+          int pcInput = askInput(board);
+          board[pcInput-1] = 'O';
+
+          //Cek menang
+          int condition = isFinish(board);
+
+          if (condition == 2){
+            //seri
+            board[9] = 'd';
+            finishState.push(board);
+          }else if (condition == 1) {
+            //menang
+            board[9] = 'w';
+            finishState.push(board);
+          }else if (condition == 99) {
+            //quit error
+            finishAll();
+          }
+
+          //Tambah pembatas kecuali di terakhir
+          appendToFile(board, i);
+
+          stateList.push(board);
+        }else{
+          //Invalid move
+          appendToFile(board, i);
         }
+      }else{
+        //board menang atau seri
+        appendToFile(board, i);
       }
-    }else{
-      myfile<<board<<" | ";
     }
+
+
 
   }
   myfile<<"\n";
@@ -186,8 +224,6 @@ int main(){
   stateList.push(startState);
 
   while(!stateList.empty()){
-    //cout<<isFinish(stateList.front())<<endl;
-    //printDebug(stateList.front());
     processState(stateList.front());
     allState.push(stateList.front());
     stateList.pop();
