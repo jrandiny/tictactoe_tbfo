@@ -44,8 +44,13 @@ interface
   procedure readStart(var fileIn:TextFile);
   {I.S. : Terdapat file text dengan posisi line berada di tulisan [START]}
   {F.S. : startState diisi dari file, posisi line berada di baris kosong}
-  procedure readTransition(var fileIn:TextFile);
-  {I.S. : Terdapat file text dengan posisi line berada di tulisan [TRANSITION]/[TRANSITIONS]}
+  procedure readTransitionFunction(var fileIn:TextFile);
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan [TRANSITION-F]/[TRANSITIONS-F]}
+  {F.S. : Tabel transitionTable diisi dari file, kolom sebagai alphabet,
+          baris sebagai from state, dan isi sebagai to state.
+          Posisi line berada di baris kosong}
+  procedure readTransitionTable(var fileIn:TextFile);
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan [TRANSITION-T]/[TRANSITIONS-T]}
   {F.S. : Tabel transitionTable diisi dari file, kolom sebagai alphabet,
           baris sebagai from state, dan isi sebagai to state.
           Posisi line berada di baris kosong}
@@ -100,9 +105,13 @@ implementation
           begin
             readAlphabets(fileIn);
           end;
-          '[TRANSITION]','[TRANSITIONS]':
+          '[TRANSITION-F]','[TRANSITIONS-F]':
           begin
-            readTransition(fileIn);
+            readTransitionFunction(fileIn);
+          end;
+          '[TRANSITION-T]','[TRANSITIONS-T]':
+          begin
+            readTransitionTable(fileIn);
           end;
           else
           begin
@@ -239,7 +248,7 @@ implementation
   {END of readStart}
 
   {*******************************************}
-  procedure readTransition(var fileIn:TextFile);
+  procedure readTransitionFunction(var fileIn:TextFile);
 
   {KAMUS LOKAL}
   var
@@ -349,7 +358,98 @@ implementation
     until(line='');
 
   end;
-  {END of readTransition}
+  {END of readTransitionFunction}
+
+  {*******************************************}
+  procedure readTransitionTable(var fileIn:TextFile);
+
+  {KAMUS LOKAL}
+  var
+    i:integer;
+    line:string;
+    baris:integer;
+    cc:char;    {Karakter sekarang}
+    ingested:string; {String yang telah diingest}
+    part:integer;
+
+    tempFromState:integer;
+    tempInput:ArrInt;
+
+  begin
+    {Proses per baris}
+    baris:=0;
+    repeat
+      readln(fileIn, line);
+      inc(baris);
+
+      if(line <> '')then
+      begin
+        {Belum habis}
+        i:=1; {indeks karakter line}
+        part:=1; {part keberapa}
+        ingested:='';
+        while(i<=length(line))do
+        begin
+          cc := line[i];
+
+          {Proses karakter}
+          if(cc='|')then
+          begin
+            if(baris = 1)then
+            begin
+              {Proses urutan state}
+              tempInput.isi[part] := getAlphabet(ingested);
+              if(tempInput.isi[part] = VALUNDEF)then
+              begin
+                loadSukses := false;
+              end;
+            end else
+            begin
+              {Isi}
+              if(part = 1)then
+              begin
+                tempFromState := getState(ingested);
+                if(tempFromState = VALUNDEF)then
+                begin
+                  loadSukses := false;
+                end;
+              end else
+              begin
+                transitionTable.isi[tempFromState][tempInput.isi[part-1]] := getState(ingested);
+                if(transitionTable.isi[tempFromState][tempInput.isi[part-1]] = VALUNDEF)then
+                begin
+                  loadSukses := false;
+                end;
+              end;
+
+            end;
+
+
+            inc(part);
+            ingested := '';
+          end else
+          begin
+            {cc bukan |}
+            if(cc <> ' ')then
+            begin
+              {Hilangkan spasi}
+              ingested := ingested + cc;
+            end;
+          end;
+
+          inc(i);
+
+        end;
+        {i>length(line)}
+
+
+
+      end;
+    until(line='');
+
+
+  end;
+  {END of readTransitionTable}
 
   {*******************************************}
   procedure initTransition();
