@@ -156,8 +156,7 @@ implementation
   begin
     stringState := getStateLabel(currState);
 
-    i:=1;
-    while(i<=length(stringState))do
+    for i := 1 to 9 do
     begin
       currCode := stringState[i];
       if(currCode <> '0')then
@@ -175,8 +174,9 @@ implementation
       begin
         write('|');
       end;
-      inc(i);
+
     end;
+
   end;
   {END of output}
 
