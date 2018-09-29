@@ -42,10 +42,19 @@ begin
     begin
       output();
       inputAlphabet('Masukkan angka lokasi (1-9) = ');
-      writeln('currState = ',currState);
     end;
 
-    writeln('SELESAI, komputer menang');
+    if(getStateLabel(currState)[10]='w')then
+    begin
+      writeln('SELESAI, komputer menang');
+      output();
+    end else
+    begin
+      writeln('SELESAI, seri');
+      output();
+    end;
+
+
   end;
 
 
