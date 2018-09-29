@@ -176,8 +176,10 @@ void processState(string board){
           board[i-1] = 'X';
 
           //Minta input PC dan isi
-          int pcInput = askInput(board);
-          board[pcInput-1] = 'O';
+          if(isFinish(board)==0){
+            int pcInput = askInput(board);
+            board[pcInput-1] = 'O';
+          }
 
           //Cek menang
           int condition = isFinish(board);
@@ -219,7 +221,18 @@ int main(){
   myfile.open("out.txt");
   myfile<<"                   1    |     2      |  3         |  4         |     6      |     7      |      8     |     9\n";
 
-  string startState = "0000O0000-";
+  string startState;
+
+  cout<<"Tulis startState"<<endl;
+  cout<<"1 = 0000O0000-"<<endl;
+  cout<<"2 = O000X0000-"<<endl;
+  cin>> startState;
+
+  if(startState=="1"){
+    startState = "0000O0000-";
+  }else if (startState=="2") {
+    startState = "O000X0000-";
+  }
 
   stateList.push(startState);
 
