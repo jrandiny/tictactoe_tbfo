@@ -113,6 +113,10 @@ implementation
           begin
             readTransitionTable(fileIn);
           end;
+          '':
+          begin
+            
+          end;
           else
           begin
             writeln('ERROR, Unknown input type');
