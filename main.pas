@@ -36,6 +36,7 @@ begin
 
   writeln();
 
+  {Jika berhasil diload, currState akan diisi sesuai startState}
   if(currState <> VALUNDEF)then
   begin
     while(not(isFinalState(currState)))do
@@ -43,7 +44,9 @@ begin
       output();
       inputAlphabet('Masukkan angka lokasi (1-9) = ');
     end;
+    {isFinalState(currState)}
 
+    {Cek menang atau seri}
     if(getStateLabel(currState)[10]='w')then
     begin
       writeln('SELESAI, komputer menang');
@@ -53,6 +56,11 @@ begin
       writeln('SELESAI, seri');
       output();
     end;
+
+    writeln();
+
+    {print langkah}
+    outputHistory();
 
 
   end;

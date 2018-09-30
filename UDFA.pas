@@ -5,7 +5,8 @@ interface
 
   {KAMUS}
   var
-    currState:integer;
+    currState : integer;
+    history   : ArrHistory;
 
   {*** KELOMPOK LOAD ***}
   procedure loadDFA(namaFile:string);
@@ -20,6 +21,10 @@ interface
   procedure output();
   {I.S. : DFA sudah diload, currState terdefinisi}
   {F.S. : Tercetak kondisi papan sekarang}
+
+  procedure outputHistory();
+  {I.S. : currState adalah final state}
+  {F.S. : Tercetak semua state yang dilalui}
 
   {*** KELOMPOK OPERASI ***}
   procedure transition(inputAlphabet:integer);
@@ -60,6 +65,8 @@ implementation
     begin
       writeln('LOAD BERHASIL');
       currState := startState;
+      history.States[1] := getStateLabel(startState);
+      history.Neff:=1;
     end;
 
   end;
@@ -128,6 +135,9 @@ implementation
     nextState := getNextState(inputAlphabet);
     if((nextState <> VALUNDEF) and (nextState<=states.neff))then
     begin
+      history.Input[history.Neff]  := getAlphabetLabel(inputAlphabet);
+      inc(history.Neff);
+      history.States[history.Neff] := getStateLabel(nextState);
       currState := nextState;
     end else
     begin
@@ -179,6 +189,28 @@ implementation
 
   end;
   {END of output}
+  procedure outputHistory();
+
+  {KAMUS LOKAL}
+  var
+    i : integer;
+
+  {ALGORITMA}
+  begin
+    if(isFinalState(currState))then
+    begin
+      writeln('States yang dilewati');
+
+      {Print semua isi history, dipastikan history.Neff > 2}
+      for i := 1 to (history.Neff-1) do
+      begin
+        writeln(history.States[i]);
+        writeln('↓ ',history.Input[i]);
+      end;
+      writeln(history.States[i+1]);
+    end;
+  end;
+  {END of outputHistory}
 
   procedure debugPrint();
   var
@@ -219,5 +251,6 @@ implementation
 
 initialization
   currState := VALUNDEF;
+  history.Neff := 0;
 
 end.
