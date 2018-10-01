@@ -47,14 +47,17 @@ begin
     {isFinalState(currState)}
 
     {Cek menang atau seri}
-    if(getStateLabel(currState)[10]='w')then
+    if(getStateRepresentation(currState)[10]='w')then
     begin
       writeln('SELESAI, komputer menang');
       output();
-    end else
+    end else if(getStateRepresentation(currState)[10]='d')then
     begin
       writeln('SELESAI, seri');
       output();
+    end else
+    begin
+      writeln('ERROR, undefined final state condition');
     end;
 
     writeln();
