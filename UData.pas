@@ -9,6 +9,7 @@ interface
     transitionTable : TabInt;
     finalState : ArrInt;
     startState: integer;
+    dataDesc:string;
 
     loadSukses : boolean = false;
 
@@ -96,6 +97,12 @@ implementation
         readln(fileIn,line);
 
         case (line) of
+          '[DESC]':
+          begin
+            readln(fileIn,line);
+            dataDesc := line;
+            readln(fileIn,line);
+          end;
           '[STATE]','[STATES]':
           begin
             readStates(fileIn);
@@ -581,5 +588,6 @@ implementation
 
 initialization
   loadSukses := false;
+  dataDesc :='';
 
 end.

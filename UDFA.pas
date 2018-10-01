@@ -27,6 +27,10 @@ interface
   {I.S. : currState adalah final state}
   {F.S. : Tercetak semua state yang dilalui}
 
+  procedure outputDesc();
+  {I.S. : loadDFA sudah berhasil}
+  {F.S. : mencetak deskripsi DFA (jika ada)}
+
   {*** KELOMPOK OPERASI ***}
   procedure transition(inputAlphabet:integer);
   {I.S. : DFA sudah diload, currState terdefinisi, inputAlphabet terdefinisi}
@@ -194,6 +198,8 @@ implementation
 
   end;
   {END of output}
+
+  {*******************************************}
   procedure outputHistory();
 
   {KAMUS LOKAL}
@@ -216,6 +222,13 @@ implementation
     end;
   end;
   {END of outputHistory}
+
+  {*******************************************}
+  procedure outputDesc();
+  begin
+    writeln(dataDesc);
+  end;
+  {END of outputDesc}
 
 initialization
   currState := VALUNDEF;

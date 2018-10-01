@@ -39,6 +39,7 @@ begin
   {Jika berhasil diload, currState akan diisi sesuai startState}
   if(currState <> VALUNDEF)then
   begin
+    outputDesc();
     while(not(isFinalState(currState)))do
     begin
       output();

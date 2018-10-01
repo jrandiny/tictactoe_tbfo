@@ -1,3 +1,6 @@
+[DESC]
+Langkah pertama sudah ditentukan, yaitu di tengah
+
 [STATES]
 q0  | O000X0000- |
 q1  | OX00X00O0- |
