@@ -24,7 +24,7 @@ interface
   {F.S. : Tercetak kondisi papan sekarang}
 
   procedure outputHistory();
-  {I.S. : currState adalah final state}
+  {I.S. : currState adalah final state, history.neff > 2}
   {F.S. : Tercetak semua state yang dilalui}
 
   procedure outputDesc();
@@ -61,12 +61,14 @@ implementation
 
     loadFile(namaFile);
 
+    {Cek load berhasul}
     if(not(loadSukses))then
     begin
       writeln('LOAD GAGAL');
     end else
     begin
       writeln('LOAD BERHASIL');
+      {Jika berhasil setup startState ke currState dan isi history}
       currState := startState;
       history.States[1] := getStateLabel(startState);
       history.Representation[1] := getStateRepresentation(startState);
@@ -87,6 +89,8 @@ implementation
   begin
     i:=1;
     fin:=false;
+
+    {cek apakah final state}
     while(not(fin)and(i<=finalState.neff))do
     begin
       if(finalState.isi[i]=state)then
@@ -119,6 +123,7 @@ implementation
 
     alphabet := getAlphabet(input);
 
+    {jika alphabet ada, transition}
     if(alphabet <> VALUNDEF)then
     begin
       transition(alphabet);
@@ -137,15 +142,20 @@ implementation
   {ALGORITMA}
   begin
     nextState := getNextState(inputAlphabet);
+
+    {Jika nextState terdefinisi}
     if((nextState <> VALUNDEF) and (nextState<=states.neff))then
     begin
+      {set history}
       history.Input[history.Neff]  := getAlphabetLabel(inputAlphabet);
       inc(history.Neff);
       history.States[history.Neff] := getStateLabel(nextState);
       history.Representation[history.Neff] := getStateRepresentation(nextState);
+      {set current state}
       currState := nextState;
     end else
     begin
+      {nextState tidak terdefinisi}
       writeln('ERROR, δ(' ,
               getStateLabel(currState),
               ',' ,
@@ -180,17 +190,22 @@ implementation
       currCode := stringState[i];
       if(currCode <> '0')then
       begin
+        {jika bukan 0, isi sesuai representation (X atau O)}
         write(currCode);
       end else
       begin
+        {jika 0 isi spasi}
         write(' ');
       end;
 
+      {cetak pembatas dan enter}
       if((i mod 3) = 0)then
       begin
+        {enter di ujung tiap baris}
         writeln();
       end else
       begin
+        {spasi di tempat lain selain ujung baris}
         write('|');
       end;
 

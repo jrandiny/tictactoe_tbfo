@@ -11,7 +11,7 @@ interface
     startState: integer;
     dataDesc:string;
 
-    loadSukses : boolean = false;
+    loadSukses : boolean;
 
   {*** KUMPULAN PROSEDUR FUNGSI I/O FILE ***}
   procedure initTransition();
@@ -86,16 +86,20 @@ implementation
   begin
     if(FileExists(namaFile))then
     begin
+      {setup file}
       assign(fileIn,namaFile);
       reset(fileIn);
 
+      {setup variabel}
       initTransition();
       loadSukses := true;
 
+      {baca file}
       while(not(eof(fileIn)))do
       begin
         readln(fileIn,line);
 
+        {cek keyword section}
         case (line) of
           '[DESC]':
           begin
@@ -169,6 +173,7 @@ implementation
       {Baca baris}
       readln(fileIn,line);
 
+      {Jika belom habis, isi array alphabets}
       if(line <> '')then
       begin
         inc(i);
@@ -189,9 +194,9 @@ implementation
   var
     i,j:integer;
     line:string;
-    temp:string;
-    cc:char;
-    part:integer;
+    temp:string; {temporary untuk part dari states}
+    cc:char;     {current char yang dibaca}
+    part:integer;{part dari states (isi atau representation)}
 
   {ALGORITMA}
   begin
@@ -206,9 +211,12 @@ implementation
         j:=1;
         temp:='';
         part:=1;
+        {Parsing per karakter}
         while j<= length(line) do
         begin
           cc := line[j];
+
+          {Jika menemui pembatas proses}
           if(cc='|')then
           begin
             if(part=1)then
@@ -224,11 +232,13 @@ implementation
           begin
             if(cc <>' ')then
             begin
+              {Jika bukan pembatas dan bukan spasi}
               temp:=temp+cc;
             end;
           end;
           inc(j);
         end;
+        {j > length(line)}
         inc(i);
 
       end;
@@ -260,6 +270,8 @@ implementation
       begin
         inc(i);
         finalState.isi[i] := getState(line);
+
+        {Cek apa state final terdaftar}
         if(finalState.isi[i]=VALUNDEF)then
         begin
           loadSukses:=false;
@@ -284,6 +296,8 @@ implementation
   begin
     readln(fileIn,line);
     startState := getState(line);
+
+    {Cek apa startState terdaftar di daftar state}
     if(startState=VALUNDEF)then
     begin
       loadSukses:=false;
@@ -301,12 +315,12 @@ implementation
   var
     i,j:integer;
     line:string;
-    cc:char;    {Karakter sekarang}
-    cc2:char;
+    cc:char;         {Karakter sekarang}
+    cc2:char;        {CC untuk parsing bagian input dengan koma (parsing kedua)}
     ingested:string; {String yang telah diingest}
-    secondIngest:string;
-    part:integer;
-    inputCount:integer;
+    secondIngest:string; {temporary untuk pasrsing kedua dengan koma (input list)}
+    part:integer;    {Bagian keberapa yang sedang diproses (from, input, atau to)}
+    inputCount:integer; {Jumlah input (jika >1 pakai koma)}
 
     tempFromState:integer;
     tempInput:ArrInt;
@@ -340,6 +354,8 @@ implementation
                 j:=1; {untuk multi input}
                 inputCount:=1;
                 secondIngest:='';
+
+                {Proses parsing kedua untuk koma}
                 while(j<=length(ingested))do
                 begin
                   cc2 := ingested[j];
@@ -355,6 +371,7 @@ implementation
 
                   inc(j);
                 end;
+                {j>length(ingested)}
 
                 tempInput.isi[inputCount] := getAlphabet(secondIngest);
 
@@ -442,9 +459,10 @@ implementation
           {Proses karakter}
           if(cc='|')then
           begin
+            {untuk baris 1, jadikan urutan input}
             if(baris = 1)then
             begin
-              {Proses urutan state}
+              {Proses urutan input}
               tempInput.isi[part] := getAlphabet(ingested);
               if(tempInput.isi[part] = VALUNDEF)then
               begin
@@ -452,7 +470,9 @@ implementation
               end;
             end else
             begin
-              {Isi}
+              {baris != 1}
+
+              {kolom 1 diset untuk jadi fromState}
               if(part = 1)then
               begin
                 tempFromState := getState(ingested);
@@ -462,6 +482,7 @@ implementation
                 end;
               end else
               begin
+                {part != 1}
                 transitionTable.isi[tempFromState][tempInput.isi[part-1]] := getState(ingested);
                 if(transitionTable.isi[tempFromState][tempInput.isi[part-1]] = VALUNDEF)then
                 begin
@@ -470,7 +491,6 @@ implementation
               end;
 
             end;
-
 
             inc(part);
             ingested := '';
@@ -489,11 +509,9 @@ implementation
         end;
         {i>length(line)}
 
-
-
       end;
     until(line='');
-
+    {line = ''}
 
   end;
   {END of readTransitionTable}
@@ -507,6 +525,7 @@ implementation
 
   {ALGORITMA}
   begin
+    {isi semua tabel dengan VALUNDEF}
     for i:=1 to NMAX do
     begin
       for j:=1 to NMAX do
@@ -530,7 +549,9 @@ implementation
     begin
       inc(i)
     end;
+    {i>alphabets.neff atau alphabets.isi[i] = alphabet}
 
+    {jika tidak ketemu}
     if(i>alphabets.neff)then
     begin
       writeln('ERROR, alphabet not defined (',alphabet,')');
@@ -554,7 +575,9 @@ implementation
     begin
       inc(i)
     end;
+    {i > states.neff atau states.isi[i] = state}
 
+    {Cek apakah terdefinisi}
     if(i>states.neff)then
     begin
       writeln('ERROR, state not defined (',state,')');
