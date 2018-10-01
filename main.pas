@@ -5,7 +5,7 @@ uses UDFA,UTipe,UData;
 {KAMUS}
 var
   userFirst:boolean;
-  input:integer;
+  input:char;
 
 {ALGORITMA}
 begin
@@ -20,9 +20,9 @@ begin
   repeat
     write('Masukkan pilihan (1/O) = ');
     readln(input);
-  until((input=1)or(input=0));
+  until((input='1')or(input='0'));
 
-  userFirst := (input = 0);
+  userFirst := (input = '0');
 
   writeln('Loading DFA...');
 
