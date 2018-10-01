@@ -16,7 +16,8 @@ interface
   {*** KELOMPOK I/O ***}
   procedure inputAlphabet(prompt:string);
   {I.S. : DFA sudah diload, currState terdefinisi}
-  {F.S. : Meminta input user lalu mengubah currState sesuai input dan transitionTable}
+  {F.S. : Meminta input user lalu mengubah currState sesuai input dan
+          transitionTable}
 
   procedure output();
   {I.S. : DFA sudah diload, currState terdefinisi}
@@ -39,8 +40,6 @@ interface
   {*** KELOMPOK TEST ***}
   function isFinalState(state:integer): boolean;
   {Menerima input state sekarang (format sudah integer) dan cek apa final}
-
-  procedure debugPrint();
 
 implementation
   procedure loadDFA(namaFile:string);
@@ -143,7 +142,11 @@ implementation
       currState := nextState;
     end else
     begin
-      writeln('ERROR, δ(' ,getStateLabel(currState), ',' , getAlphabetLabel(inputAlphabet), ') tidak terdefinisi ')
+      writeln('ERROR, δ(' ,
+              getStateLabel(currState),
+              ',' ,
+              getAlphabetLabel(inputAlphabet),
+              ') tidak terdefinisi ');
     end;
   end;
   {END of transition}
@@ -213,43 +216,6 @@ implementation
     end;
   end;
   {END of outputHistory}
-
-  procedure debugPrint();
-  var
-    i,j:integer;
-  begin
-    writeln('STATES');
-    for i:=1 to states.neff do
-    begin
-      writeln(states.isi[i]);
-    end;
-
-    writeln('ALPHABET');
-    for i:=1 to alphabets.neff do
-    begin
-      writeln(alphabets.isi[i]);
-    end;
-
-    writeln('FINAL');
-    for i:=1 to finalState.neff do
-    begin
-      writeln(finalState.isi[i]);
-    end;
-
-    writeln('START');
-    writeln(startState);
-
-    writeln('TRANSITION');
-    for i:=1 to 10 do
-    begin
-      for j:=1 to 5 do
-      begin
-        write(Format('%-3d',[transitionTable.isi[i][j]]),' ');
-      end;
-
-      writeln('');
-    end;
-  end;
 
 initialization
   currState := VALUNDEF;

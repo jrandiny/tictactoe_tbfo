@@ -1,4 +1,4 @@
-program main;
+program tictactoe;
 
 uses UDFA,UTipe,UData;
 
@@ -61,9 +61,5 @@ begin
 
     {print langkah}
     outputHistory();
-
-
   end;
-
-
 end.

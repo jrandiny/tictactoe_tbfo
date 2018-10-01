@@ -33,24 +33,29 @@ interface
 
 
   procedure readAlphabets(var fileIn:TextFile);
-  {I.S. : Terdapat file text dengan posisi line berada di tulisan [ALPHABET]/[ALPHABETS]}
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan
+          [ALPHABET]/[ALPHABETS]}
   {F.S. : Array alphabets diisi dari file, posisi line berada di baris kosong}
   procedure readStates(var fileIn:TextFile);
-  {I.S. : Terdapat file text dengan posisi line berada di tulisan [STATE]/[STATES]}
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan
+          [STATE]/[STATES]}
   {F.S. : Array states diisi dari file, posisi line berada di baris kosong}
   procedure readFinal(var fileIn:TextFile);
-  {I.S. : Terdapat file text dengan posisi line berada di tulisan [FINAL]/[FINALS]}
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan
+          [FINAL]/[FINALS]}
   {F.S. : Array finalState diisi dari file, posisi line berada di baris kosong}
   procedure readStart(var fileIn:TextFile);
   {I.S. : Terdapat file text dengan posisi line berada di tulisan [START]}
   {F.S. : startState diisi dari file, posisi line berada di baris kosong}
   procedure readTransitionFunction(var fileIn:TextFile);
-  {I.S. : Terdapat file text dengan posisi line berada di tulisan [TRANSITION-F]/[TRANSITIONS-F]}
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan
+          [TRANSITION-F]/[TRANSITIONS-F]}
   {F.S. : Tabel transitionTable diisi dari file, kolom sebagai alphabet,
           baris sebagai from state, dan isi sebagai to state.
           Posisi line berada di baris kosong}
   procedure readTransitionTable(var fileIn:TextFile);
-  {I.S. : Terdapat file text dengan posisi line berada di tulisan [TRANSITION-T]/[TRANSITIONS-T]}
+  {I.S. : Terdapat file text dengan posisi line berada di tulisan
+          [TRANSITION-T]/[TRANSITIONS-T]}
   {F.S. : Tabel transitionTable diisi dari file, kolom sebagai alphabet,
           baris sebagai from state, dan isi sebagai to state.
           Posisi line berada di baris kosong}
@@ -567,6 +572,7 @@ implementation
   end;
   {END of getStateLabel}
 
+  {*******************************************}
   function getStateRepresentation(state:integer):string;
   begin
     getStateRepresentation:=states.representation[state];
