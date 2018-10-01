@@ -38,6 +38,12 @@ void finishAll(){
     allState.pop();
   }
   allFile.close();
+  system("awk '!x[$0]++' all.txt > all_strip.txt");
+  system("awk '!x[$0]++' out.txt > out_strip.txt");
+  system("awk '!x[$0]++' finish.txt > finish_strip.txt");
+  system("rm all.txt");
+  system("rm out.txt");
+  system("rm finish.txt");
   exit(0);
 }
 
