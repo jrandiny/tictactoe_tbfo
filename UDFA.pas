@@ -66,6 +66,7 @@ implementation
       writeln('LOAD BERHASIL');
       currState := startState;
       history.States[1] := getStateLabel(startState);
+      history.Representation[1] := getStateRepresentation(startState);
       history.Neff:=1;
     end;
 
@@ -138,6 +139,7 @@ implementation
       history.Input[history.Neff]  := getAlphabetLabel(inputAlphabet);
       inc(history.Neff);
       history.States[history.Neff] := getStateLabel(nextState);
+      history.Representation[history.Neff] := getStateRepresentation(nextState);
       currState := nextState;
     end else
     begin
@@ -204,10 +206,10 @@ implementation
       {Print semua isi history, dipastikan history.Neff > 2}
       for i := 1 to (history.Neff-1) do
       begin
-        writeln(history.States[i]);
-        writeln('↓ ',history.Input[i]);
+        writeln(Format('%3s  %10s',[history.States[i],history.Representation[i]]));
+        writeln(' ↓ ',history.Input[i]);
       end;
-      writeln(history.States[i+1]);
+      writeln(Format('%3s  %10s',[history.States[i+1],history.Representation[i+1]]));
     end;
   end;
   {END of outputHistory}

@@ -31,6 +31,7 @@ interface
   type ArrHistory = record
     States : array[1..NMAX] of string;
     Input  : array[1..NMAX] of string;
+    Representation : array[1..NMAX] of string;
     Neff   : integer;
   end;
 
