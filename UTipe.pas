@@ -17,6 +17,12 @@ interface
     Neff : integer;
   end;
 
+  type ArrStates = record
+    Isi  : array[1..NMAX] of string;
+    Representation  : array[1..NMAX] of string;
+    Neff : integer;
+  end;
+
   type ArrInt = record
     Isi  : array[1..NMAX] of integer;
     Neff : integer;

@@ -4,7 +4,7 @@ interface
   uses UTipe,SysUtils;
 
   var
-    states: ArrString;
+    states: ArrStates;
     alphabets: ArrString;
     transitionTable : TabInt;
     finalState : ArrInt;
@@ -65,6 +65,8 @@ interface
   {Menerima alphabet berupa integer lalu mengoutput versi stringnya}
   function getStateLabel(state:integer):string;
   {Menerima state berupa integer lalu mengoutput versi stringnya}
+  function getStateRepresentation(state:integer):string;
+  {Menerima state berupa integer lalu mengoutput representationnya}
 
 implementation
   procedure loadFile(namaFile : string);
@@ -115,7 +117,7 @@ implementation
           end;
           '':
           begin
-            
+
           end;
           else
           begin
@@ -173,12 +175,15 @@ implementation
 
   {KAMUS LOKAL}
   var
-    i:integer;
+    i,j:integer;
     line:string;
+    temp:string;
+    cc:char;
+    part:integer;
 
   {ALGORITMA}
   begin
-    i := 0;
+    i := 1;
 
     repeat
       {Baca baris}
@@ -186,14 +191,40 @@ implementation
 
       if(line <> '')then
       begin
+        j:=1;
+        temp:='';
+        part:=1;
+        while j<= length(line) do
+        begin
+          cc := line[j];
+          if(cc='|')then
+          begin
+            if(part=1)then
+            begin
+              states.isi[i] := temp;
+            end else if(part=2)then
+            begin
+              states.representation[i] := temp;
+            end;
+            temp:='';
+            inc(part);
+          end else
+          begin
+            if(cc <>' ')then
+            begin
+              temp:=temp+cc;
+            end;
+          end;
+          inc(j);
+        end;
         inc(i);
-        states.isi[i] := line;
+
       end;
 
     until(line = '');
     {line = ''}
 
-    states.neff := i;
+    states.neff := i-1;
   end;
   {End of readStates}
 
@@ -535,6 +566,12 @@ implementation
     getStateLabel:=states.isi[state];
   end;
   {END of getStateLabel}
+
+  function getStateRepresentation(state:integer):string;
+  begin
+    getStateRepresentation:=states.representation[state];
+  end;
+  {END of getStateRepresentation}
 
 initialization
   loadSukses := false;

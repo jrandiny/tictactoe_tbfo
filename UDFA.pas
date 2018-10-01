@@ -164,7 +164,7 @@ implementation
 
   {ALGORITMA}
   begin
-    stringState := getStateLabel(currState);
+    stringState := getStateRepresentation(currState);
 
     for i := 1 to 9 do
     begin
